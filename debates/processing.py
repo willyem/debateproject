@@ -15,6 +15,7 @@ def parse_text(filename):
 	#finds the line with the "for the motion" speakers and appends 
 	#speaker names + ":"
 
+
 	for line in working_text: 
 	    if line.lower().startswith("for the motion:"):
 	        line = line.replace(" and ", ":")
@@ -43,13 +44,15 @@ def parse_text(filename):
 
 	    for index, line in enumerate(working_text):
 	    
+#	    	print index, line
 	        if ((speaker in line) or (speaker.upper()[:-1] in line)) and (started==False): 
 	            start_index = index
 	            started = True
-	                
+
+
 	        if started == True: 
 	            for anti in against_and_moderator: 
-	                if anti.upper()[:-1] in line: 
+	                if (anti in line) or (anti.upper()[:-1] in line): 
 	                    for_the_motion_text.append(working_text[start_index+1:index])
 	                    started = False
 
@@ -72,7 +75,7 @@ def parse_text(filename):
 	                
 	        if started == True: 
 	            for pro in for_and_moderator: 
-	                if pro.upper()[:-1] in line: 
+	                if (pro in line) or (pro.upper()[:-1] in line): 
 	                    against_the_motion_text.append(working_text[start_index+1:index])
 	                    started = False
 	
