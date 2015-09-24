@@ -16,7 +16,7 @@ def parse_text(filename):
 	#speaker names + ":"
 
 
-	for line in working_text: 
+	for line in working_text:
 	    if line.lower().startswith("for the motion:"):
 	        line = line.replace(" and ", ":")
 	        line = line.replace(",",":")
@@ -31,7 +31,8 @@ def parse_text(filename):
 	            against_motion.append(item.strip()+":")
 	            
 	for line in working_text: 
-	    if line.lower().startswith("moderator"): 
+	    if line.lower().startswith("Moderator"):
+#	    	print line 
 	        moderator.append(line.split(":")[1].strip()+":")
 
 	#Puts all "for the motion" text into a list 
