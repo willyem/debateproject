@@ -82,5 +82,5 @@ def parse_text(filename):
 	
 	all_for_text = [' '.join([' '.join(item) for item in for_the_motion_text])]
 	all_against_text = [' '.join([' '.join(item) for item in against_the_motion_text])]
-	#returns the for the motion text and the against the motion textcode
+	#returns the for the motion text and the against the motion text
 	return all_for_text, all_against_text
