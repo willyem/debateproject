@@ -1,4 +1,5 @@
 import processing
+import pandas as pd
 import string 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
@@ -90,7 +91,9 @@ tfidfed = tfidf.fit_transform(all_words).toarray()
 
 cosine_similarities = linear_kernel(tfidfed, tfidfed)
 
+df = pd.DataFrame(tfidfed)
+
 #print cosine_similarities
-for index, vector in enumerate(tfidfed): 
-    if sum(vector) == 0.0:
-        print index 
+#for index, vector in enumerate(tfidfed): 
+#    if sum(vector) == 0.0:
+#        print index 
