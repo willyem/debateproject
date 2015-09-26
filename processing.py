@@ -1,5 +1,5 @@
 import re
-from textblob import TextBlob 
+#from textblob import TextBlob 
 
 def parse_text(filename): 
 #Opens up a txt file and splits on new lines; 
@@ -49,7 +49,11 @@ def parse_text(filename):
 
 	print filename
 	print for_speakers
+	for speaker in for_motion_text: 
+		print len(speaker)
 	print against_speakers
+	for speaker in aga_motion_text:
+		print len(speaker)
 	print '\n\n\n'
 
 #	print for_motion_text
@@ -102,6 +106,8 @@ def get_motion_text(motion_speakers, non_motion_speakers, working_text):
 
 	for speaker in motion_speakers:
 
+	    other_motion_speakers = [person for person in motion_speakers if person != speaker]
+
 	    speaker_text = [] 
 
 	    for index, line in enumerate(working_text):
@@ -111,9 +117,9 @@ def get_motion_text(motion_speakers, non_motion_speakers, working_text):
 
 
 	        elif started == True: 
-	            for anti in non_motion_speakers:
+	            for non_speaker in non_motion_speakers + other_motion_speakers:
 
-	                if (anti in line) or (anti.upper()[:-1] in line): 
+	                if (non_speaker in line) or (non_speaker.upper()[:-1] in line): 
 	                    speaker_text.append(working_text[start_index+1:index])
 	                    started = False
 
