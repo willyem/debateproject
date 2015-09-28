@@ -10,7 +10,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag
 import numpy as np
 
-
+'''
 names_and_win = [('campus_assault.txt', [0, 1]), ('ISIS_defeated.txt', [0, 1]), ('samesex.txt', [0, 1]), ('iran_deal.txt', [0, 1]),\
 ('death_penalty.txt', [0, 1]), ('constitutional_authority.txt', [0, 1]), ('right_to_forget.txt', [0, 1]), \
 ('liberals_stifling.txt', [1, 0]), ('declinists.txt', [1, 0]), ('amazon.txt', [0, 1]), ('gmos.txt', [1, 0]), ('eutha.txt', [0, 1]), \
@@ -43,14 +43,21 @@ names_and_win = [('campus_assault.txt', [0, 1]), ('ISIS_defeated.txt', [0, 1]), 
 ('more_domestic_surveillance.txt', [0, 1]), ('global_warming_not.txt', [1, 0]), ('america_too_religious.txt', [1, 0]), \
 ('hollywood_anti_us.txt', [0, 1]), ('democratic_hamas.txt', [0, 1]), ('license_to_offend.txt', [1, 0]), \
 ('tolerate_iran.txt', [1, 0])]
+'''
+
 
 wordnet = WordNetLemmatizer()
 stop = set(stopwords.words('english'))
+
 all_words = [] 
 
 for document in names_and_win:
     for_, aga_=  processing.parse_text('debate_text/'+document[0]) #/document
 
+    print for_
+    print '\n\n\n\n\n\n\n\n\n\n'
+    print aga_
+    print '\n\n\n\n\n\n\n\n\n\n'
     ##tokenize 'for_'
     tokenized_for = word_tokenize(for_[0].decode('unicode_escape').encode('ascii', 'ignore'))
     tokenized_aga = word_tokenize(aga_[0].decode('unicode_escape').encode('ascii', 'ignore'))
@@ -91,7 +98,7 @@ tfidfed = tfidf.fit_transform(all_words).toarray()
 
 cosine_similarities = linear_kernel(tfidfed, tfidfed)
 
-df = pd.DataFrame(tfidfed)
+#df = pd.DataFrame(tfidfed)
 
 #print cosine_similarities
 #for index, vector in enumerate(tfidfed): 
