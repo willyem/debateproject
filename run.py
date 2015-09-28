@@ -5,8 +5,6 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 import nltk.data
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag
 import numpy as np
 
@@ -45,15 +43,23 @@ names_and_win = [('campus_assault.txt', [0, 1]), ('ISIS_defeated.txt', [0, 1]), 
 ('tolerate_iran.txt', [1, 0])]
 '''
 
-
-wordnet = WordNetLemmatizer()
+names_and_win2 = [('campus_assault.txt', [0, 1])]
 stop = set(stopwords.words('english'))
 
 all_words = [] 
 
-for document in names_and_win:
-    for_, aga_=  processing.parse_text('debate_text/'+document[0]) #/document
+df = pd.DataFrame(columns = ["For_text", "FL", "FA", "FP", "FS", \
+                             "Against_text", "AL", "AA", "AP", "AS"])
 
+i = 0
+for document in names_and_win:
+    
+    df.loc[i] =  processing.parse_text('debate_text/'+document[0]) #/document
+    i += 1 
+
+print df
+
+'''
     print for_
     print '\n\n\n\n\n\n\n\n\n\n'
     print aga_
@@ -70,26 +76,6 @@ for document in names_and_win:
 
     all_words += for_ + aga_
 
-#docs_wordnet = [wordnet.lemmatize(word) for word in all_words]
-
-#docs = docs_wordnet
-
-#vocab_set = set()
-
-#[vocab_set.add(token) for token in docs]
-
-#vocab = list(vocab_set)
-
-#cv = CountVectorizer(stop_words = 'english')
-#vectorized = cv.fit_transform(for_+aga_)
-def tokenize(doc):
-    '''
-    INPUT: string
-    OUTPUT: list of strings
-
-    Tokenize and stem/lemmatize the document.
-    '''
-    return [wordnet.lemmatize(word) for word in word_tokenize(doc.lower())]
 
 tfidf = TfidfVectorizer(stop_words='english')
 tfidfed = tfidf.fit_transform(all_words).toarray()
@@ -104,3 +90,4 @@ cosine_similarities = linear_kernel(tfidfed, tfidfed)
 #for index, vector in enumerate(tfidfed): 
 #    if sum(vector) == 0.0:
 #        print index 
+'''

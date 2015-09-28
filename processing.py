@@ -1,6 +1,31 @@
 import re
-#from textblob import TextBlob 
+import processing
+import pandas as pd
+import string 
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.metrics.pairwise import linear_kernel
+import nltk.data
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk import pos_tag
+import numpy as np
+from textblob import TextBlob 
 
+wordnet = WordNetLemmatizer()
+stop = set(stopwords.words('english'))
+
+
+'''
+def tokenize(text): 
+
+    INPUT: string
+    OUTPUT: list of strings
+
+    Tokenize and stem/lemmatize the document.
+    
+    return [wordnet.lemmatize(word) for word in word_tokenize(doc.lower())]
+'''
 def parse_text(filename): 
 #Opens up a txt file and splits on new lines; 
 #removes empty items from list 
@@ -25,23 +50,26 @@ def parse_text(filename):
 	for_motion_text = decode_text(for_motion_text)
 	aga_motion_text = decode_text(aga_motion_text)
 
-	print filename
+	lc_for = get_laughter_count(for_motion_text)
+	ac_for = get_applause_count(for_motion_text)
 	
-	print for_speakers
-	print 'laughter count:'
-	print get_laughter_count(for_motion_text)
-	print 'applause count:'
-	print get_applause_count(for_motion_text)
+	lc_aga = get_laughter_count(aga_motion_text)
+	ac_aga = get_applause_count(aga_motion_text)
+
+	#makes 'for_motion_text' into a single string
+	for_motion_text = [' '.join([' '.join(item) for item in for_motion_text])]
 	
-	print against_speakers
-	print 'laughter count:'
-	print get_laughter_count(aga_motion_text)
-	print 'applause count:'
-	print get_applause_count(aga_motion_text)
+	#makes 'aga_motion_text' into a single string
+	aga_motion_text = [' '.join([' '.join(item) for item in aga_motion_text])]
 
-	print '\n\n\n********'
+	for_pol, for_subj = get_sentiment_analysis(for_motion_text[0])
+	aga_pol, aga_subj = get_sentiment_analysis(aga_motion_text[0])
+	
+	#Returns text, laughter, applause, polarity, and subjectivity for 
+	#both for and against motion text
 
-	return for_motion_text, aga_motion_text
+	return for_motion_text, lc_for, ac_for, for_pol, for_subj, \
+			aga_motion_text, lc_aga, ac_aga, aga_pol, aga_subj
 
 #	print filename
 #	print for_speakers
@@ -61,6 +89,11 @@ def parse_text(filename):
 
 
 ''' counts the number of times laughter is in the text'''
+
+def get_sentiment_analysis(text): 
+	temp = TextBlob(text)
+	return temp.sentiment.polarity, temp.sentiment.subjectivity
+
 
 def get_laughter_count(text):
 	return sum([sum([sentence.count('[laughter]') + sentence.count('LAUGHTER') \
