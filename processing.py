@@ -68,8 +68,10 @@ def parse_text(filename):
 	#Returns text, laughter, applause, polarity, and subjectivity for 
 	#both for and against motion text
 
-	return for_motion_text, lc_for, ac_for, for_pol, for_subj, \
-			aga_motion_text, lc_aga, ac_aga, aga_pol, aga_subj
+#	return for_motion_text, lc_for, ac_for, for_pol, for_subj, \
+#			aga_motion_text, lc_aga, ac_aga, aga_pol, aga_subj \ 
+#			for_speakers, against_speakers
+	return for_speakers, against_speakers
 
 #	print filename
 #	print for_speakers

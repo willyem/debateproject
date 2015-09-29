@@ -1,13 +1,3 @@
-import processing
-import pandas as pd
-import string 
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
-import nltk.data
-from nltk.corpus import stopwords
-from nltk import pos_tag
-import numpy as np
-
 '''
 names_and_win = [('campus_assault.txt', [0, 1], [(0, 1), (1, 0)]), ('samesex.txt', [0, 1], [(0, 0), (0, 0)]), ('iran_deal.txt', [0, 1], [(0, 0), (0, 0)]),\
 ('death_penalty.txt', [0, 1], [(1, 0), (0, 0)]), ('constitutional_authority.txt', [0, 1], [(0, 1), (0, 0)]), ('right_to_forget.txt', [0, 1], [(0, 0), (0, 0)]), \
@@ -42,53 +32,4 @@ names_and_win = [('campus_assault.txt', [0, 1], [(0, 1), (1, 0)]), ('samesex.txt
 ('more_domestic_surveillance.txt', [0, 1], [(0, 0, 0), (0, 0, 1)]), ('global_warming_not.txt', [1, 0], [(0, 0, 0), (1, 0, 0)]), ('america_too_religious.txt', [1, 0], [(1, 0, 0), (1, 0, 0)]), \
 ('hollywood_anti_us.txt', [0, 1], [(0, 0, 0), (1, 0, 0)]), ('democratic_hamas.txt', [0, 1], [(0, 0, 0), (0, 0, 0)]), ('license_to_offend.txt', [1, 0], [(0, 0, 1), (0, 1, 1)]), \
 ('tolerate_iran.txt', [1, 0], [(0, 0, 0), (0, 0, 0)])]
-'''
-
-names_and_win2 = [('campus_assault.txt', [0, 1])]
-stop = set(stopwords.words('english'))
-
-all_words = [] 
-
-df = pd.DataFrame(columns = ["For_text", "FL", "FA", "FP", "FS", \
-                             "Against_text", "AL", "AA", "AP", "AS"])
-
-i = 0
-for document in names_and_win:
-    
-    df.loc[i] =  processing.parse_text('debate_text/'+document[0]) #/document
-    i += 1 
-
-print df
-
-'''
-    print for_
-    print '\n\n\n\n\n\n\n\n\n\n'
-    print aga_
-    print '\n\n\n\n\n\n\n\n\n\n'
-    ##tokenize 'for_'
-    tokenized_for = word_tokenize(for_[0].decode('unicode_escape').encode('ascii', 'ignore'))
-    tokenized_aga = word_tokenize(aga_[0].decode('unicode_escape').encode('ascii', 'ignore'))
-
-    for_wo_punctuation_words = [x for x in tokenized_for if x not in string.punctuation]
-    aga_wo_punctuation_words = [x for x in tokenized_aga if x not in string.punctuation]
-
-    docs_for = [word for word in for_wo_punctuation_words if word not in stop] 
-    docs_aga = [word for word in aga_wo_punctuation_words if word not in stop] 
-
-    all_words += for_ + aga_
-
-
-tfidf = TfidfVectorizer(stop_words='english')
-tfidfed = tfidf.fit_transform(all_words).toarray()
-
-#print tfidfed
-
-cosine_similarities = linear_kernel(tfidfed, tfidfed)
-
-#df = pd.DataFrame(tfidfed)
-
-#print cosine_similarities
-#for index, vector in enumerate(tfidfed): 
-#    if sum(vector) == 0.0:
-#        print index 
 '''
