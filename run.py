@@ -8,6 +8,10 @@ from nltk.corpus import stopwords
 from nltk import pos_tag
 import numpy as np
 
+#[0] = name of document 
+#[1] = winner of debate; [x, y] --> x = For, y = Against
+#[2] = gender of speaker; 0 = male, 1 = female 
+
 '''
 names_and_win = [('campus_assault.txt', [0, 1], [(0, 1), (1, 0)]), ('samesex.txt', [0, 1], [(0, 0), (0, 0)]), ('iran_deal.txt', [0, 1], [(0, 0), (0, 0)]),\
 ('death_penalty.txt', [0, 1], [(1, 0), (0, 0)]), ('constitutional_authority.txt', [0, 1], [(0, 1), (0, 0)]), ('right_to_forget.txt', [0, 1], [(0, 0), (0, 0)]), \
@@ -52,13 +56,94 @@ all_words = []
 df = pd.DataFrame(columns = ["For_text", "FL", "FA", "FP", "FS", \
                              "Against_text", "AL", "AA", "AP", "AS"])
 
+
+#inserts values from parse_text into dataframe at the given position
 i = 0
 for document in names_and_win:
     
     df.loc[i] =  processing.parse_text('debate_text/'+document[0]) #/document
     i += 1 
 
-print df
+
+
+#creates a list of items where each item refers to either a for the motion text (0-106) 
+#or against the motion text (107-214); 
+
+all_text = []
+for row in df['For_text']:
+    all_text.append(row)
+
+for row in df['Against_text']: 
+    all_text.append(row)
+
+all_text = [' '.join(item) for item in all_text]
+
+# tfidf-erizes each for the motion and against the motion text \\ 
+# appends the DIFFERENCE between the two to a new column 
+# known as vector differences
+tfidf = TfidfVectorizer(stop_words = 'english')
+tfidf_vectors = tfidf.fit_transform(all_text)
+
+vector_differences = tfidf_vectors[0:107] - tfidf_vectors[107:214]
+
+df['Vector_differences'] = list(vector_differences.todense())
+
+
+#generates list of who won/lost the debate and sets it as a feature in df
+
+for_the_motion_win_classification = []
+for item in names_and_win: 
+    for_the_motion_win_classification.append(item[1][0])
+
+#who_won --> 0 means against the motion won, 1 means for the motion won
+
+df['who_won'] = for_the_motion_win_classification
+
+
+
+
+#finds the avg of each vector_difference for all of the debates in which 
+#for the motion won, and all of the debates in which against the motion won 
+#then goes through and calculates a given debates cosine similarity to these 
+#two averages and appends those values to the DataFrame
+
+#in theory, the higher a debates similarity to a given 'avg', the more likely 
+#it is that that side won the debate 
+
+sum_of_aga_motion_tfidf_winners = sum(df[df['who_won']==0]['Vector_differences'])
+aga_wins_avg_tfidf = sum_of_aga_motion_tfidf_winners/len(df[df['who_won']==0])
+
+sum_of_for_motion_tfidf_winners = sum(df[df['who_won']==1]['Vector_differences'])
+for_wins_avg_tfidf = sum_of_for_motion_tfidf_winners/len(df[df['who_won']==1])
+
+cosim_to_aga_wins_avg_tfidf = linear_kernel(aga_wins_avg_tfidf, vector_differences)
+cosim_to_for_wins_avg_tfidf = linear_kernel(for_wins_avg_tfidf, vector_differences)
+
+df['cosim_to_for_wins'] = cosim_to_for_wins_avg_tfidf.reshape(107, 1)
+df['cosim_to_aga_wins'] = cosim_to_aga_wins_avg_tfidf.reshape(107, 1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 '''
     print for_
