@@ -10,7 +10,8 @@ from nltk.tokenize import word_tokenize
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import pos_tag
 import numpy as np
-from textblob import TextBlob 
+from textblob import TextBlob
+from textstat.textstat import textstat 
 
 wordnet = WordNetLemmatizer()
 stop = set(stopwords.words('english'))
@@ -32,8 +33,9 @@ def parse_text(filename):
 
 	temp_file = open(filename)
 	temp_text = temp_file.read()
-	temp_text = temp_text.replace("\'", "")
+#	temp_text = temp_text.replace("\'", "")
 	working_text = temp_text.split('\n')
+
 	working_text = [x.strip() for x in working_text if (x != " ") and (x != "")]
 
 
@@ -58,9 +60,13 @@ def parse_text(filename):
 
 	#makes 'for_motion_text' into a single string
 	for_motion_text = [' '.join([' '.join(item) for item in for_motion_text])]
-	
+
 	#makes 'aga_motion_text' into a single string
 	aga_motion_text = [' '.join([' '.join(item) for item in aga_motion_text])]
+
+
+	for_sc, for_ari, for_flesch = get_textstats(for_motion_text[0])
+	aga_sc, aga_ari, aga_flesch = get_textstats(aga_motion_text[0])
 
 	for_pol, for_subj = get_sentiment_analysis(for_motion_text[0])
 	aga_pol, aga_subj = get_sentiment_analysis(aga_motion_text[0])
@@ -68,8 +74,8 @@ def parse_text(filename):
 	#Returns text, laughter, applause, polarity, and subjectivity for 
 	#both for and against motion text
 
-	return for_motion_text, lc_for, ac_for, for_pol, for_subj, \
-			aga_motion_text, lc_aga, ac_aga, aga_pol, aga_subj 
+	return for_motion_text, lc_for, ac_for, for_pol, for_subj, for_sc, for_ari, for_flesch, \
+			aga_motion_text, lc_aga, ac_aga, aga_pol, aga_subj, aga_sc, aga_ari, aga_flesch
 			
 #	return for_speakers, against_speakers
 
@@ -91,6 +97,9 @@ def parse_text(filename):
 
 
 ''' counts the number of times laughter is in the text'''
+
+def get_textstats(text): 
+	return textstat.sentence_count(text), textstat.automated_readability_index(text), textstat.flesch_reading_ease(text)
 
 def get_sentiment_analysis(text): 
 	temp = TextBlob(text)
