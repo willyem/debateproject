@@ -60,10 +60,11 @@ def parse_text(filename):
 
 	#makes 'for_motion_text' into a single string
 	for_motion_text = [' '.join([' '.join(item) for item in for_motion_text])]
+	for_motion_pos = convert_to_pos(for_motion_text[0])
 
 	#makes 'aga_motion_text' into a single string
 	aga_motion_text = [' '.join([' '.join(item) for item in aga_motion_text])]
-
+	aga_motion_pos = convert_to_pos(aga_motion_text[0])
 
 	for_sc, for_ari, for_flesch = get_textstats(for_motion_text[0])
 	aga_sc, aga_ari, aga_flesch = get_textstats(aga_motion_text[0])
@@ -74,8 +75,8 @@ def parse_text(filename):
 	#Returns text, laughter, applause, polarity, and subjectivity for 
 	#both for and against motion text
 
-	return for_motion_text, lc_for, ac_for, for_pol, for_subj, for_sc, for_ari, for_flesch, \
-			aga_motion_text, lc_aga, ac_aga, aga_pol, aga_subj, aga_sc, aga_ari, aga_flesch
+	return for_motion_text, for_motion_pos, lc_for, ac_for, for_pol, for_subj, for_sc, for_ari, for_flesch, \
+			aga_motion_text, aga_motion_pos, lc_aga, ac_aga, aga_pol, aga_subj, aga_sc, aga_ari, aga_flesch
 			
 #	return for_speakers, against_speakers
 
@@ -97,6 +98,9 @@ def parse_text(filename):
 
 
 ''' counts the number of times laughter is in the text'''
+
+def convert_to_pos(text): 
+	return ' '.join([pair[1] for pair in nltk.pos_tag(word_tokenize(text))])
 
 def get_textstats(text): 
 	return textstat.sentence_count(text), textstat.automated_readability_index(text), textstat.flesch_reading_ease(text)
